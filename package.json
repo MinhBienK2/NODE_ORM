@@ -1,0 +1,62 @@
+{
+  "name": "node_orm",
+  "version": "1.0.0",
+  "description": "backend nodejs with mysql",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tsc",
+    "start": "node dist/index.js",
+    "dev": "nodemon src/server.ts",
+    "checkTs": "tsc --noEmit",
+    "eslint": "eslint --ext js,ts",
+    "lint": "yarn run eslint",
+    "lint:fix": "yarn run eslint --fix",
+    "lint:css": "stylelint src/**/*.css",
+    "prettify": "prettier --write",
+    "postinstall": "husky install"
+  },
+  "lint-staged": {
+    "*.{ts,js}": [
+      "yarn run eslint --fix"
+    ],
+    "*.{md,json}": [
+      "prettier --write"
+    ]
+  },
+  "keywords": [
+    "fullstack",
+    "nodejs",
+    "express",
+    "mysql"
+  ],
+  "author": "MinhBien",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.1.5",
+    "express": "^4.17.1",
+    "mysql2": "^3.6.1",
+    "sequelize": "^6.33.0",
+    "sequelize-cli": "^6.6.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.7.2",
+    "@commitlint/config-conventional": "^17.7.0",
+    "@types/express": "^4.17.18",
+    "@types/jest": "^29.5.5",
+    "@types/node": "^20.8.3",
+    "@typescript-eslint/eslint-plugin": "^6.7.4",
+    "@typescript-eslint/parser": "^6.7.4",
+    "eslint": "^8.0.1",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.1",
+    "nodemon": "^2.0.7",
+    "prettier": "^3.0.3",
+    "ts-node": "^10.9.1",
+    "typescript": "*"
+  }
+}
