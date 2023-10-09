@@ -1,16 +1,16 @@
-import mysql from 'mysql2';
-import { sequelize, config } from '../models';
+// import mysql from 'mysql2';
+// const { Sequelize } = require('sequelize');
+// import { config } from '@models/index';
 
-// create the connection to database
-const connection = mysql.createConnection({
-  host: config.host,
-  user: config.username,
-});
+// const sequelize = new Sequelize('test', 'root', 'minhbien123', {
+//   host: 'localhost',
+//   dialect: 'mysql',
+// });
 
 const connectDB = async () => {
   try {
-    console.log(connection);
-    await sequelize.authenticate();
+    // console.log('sequanline ', sequelize);
+    // await sequelize.authenticate();
     console.log('Connection has been established successfully.');
   } catch (error) {
     console.error('Unable to connect to the database:', error);

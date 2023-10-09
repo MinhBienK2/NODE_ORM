@@ -3,18 +3,9 @@
     "username": "root",
     "password": "minhbien123",
     "database": "test",
-    "host": "127.0.0.1",
+    "host": "localhost",
     "dialect": "mysql",
-    "pool": {
-      "max": 10,
-      "min": 0,
-      "acquire": 30000,
-      "idle": 10000
-    },
-    "query": {
-      "raw": true,
-      "mysql57": true
-    }
+    "isLogger": false
   },
   "test": {
     "username": "root",

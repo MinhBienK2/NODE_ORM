@@ -4,9 +4,9 @@
     "paths": {
       "@config/*": ["config/*"],
       "@controllers/*": ["controllers/*"],
-      "models/*": ["models/*"],
-      "route/*": ["route/*"],
-      "views/*": ["views/*"]
+      "@models/*": ["models/*"],
+      "@route/*": ["route/*"],
+      "@views/*": ["views/*"]
     }
   }
 }
