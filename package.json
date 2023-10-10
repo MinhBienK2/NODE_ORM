@@ -5,9 +5,10 @@
   "main": "src/server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx tsc",
+    "build": "rm -rf dist && tsc -p tsconfig.json && gulp copy && gulp merge",
     "start": "node dist/server.js",
-    "dev": "nodemon",
+    "watch": "nodemon --exec \"npm run build && npm run start\" --watch src --ext ts",
+    "watch-dirty": "nodemon --exec \"tsc -p tsconfig.json && npm run start\" --watch src --ext ts",
     "checkTs": "tsc --noEmit",
     "eslint": "eslint --ext js,ts",
     "lint": "yarn run eslint",
@@ -31,12 +32,12 @@
     "mysql"
   ],
   "_moduleAliases": {
-    "@utils": "./dist/utils",
-    "@config": "./dist/config",
-    "@controllers/*": "./dist/controllers/*",
-    "models/*": "./dist/models/*",
-    "route/*": "./dist/route/*",
-    "views/*": "./dist/views/*"
+    "@utils": "dist/utils",
+    "@config": "dist/config",
+    "@controllers": "dist/controllers",
+    "@models": "dist/models",
+    "@route": "dist/route",
+    "@views": "dist/views"
   },
   "author": "MinhBien",
   "license": "ISC",
@@ -48,7 +49,8 @@
     "module-alias": "^2.2.3",
     "mysql2": "^3.6.1",
     "sequelize": "^6.33.0",
-    "sequelize-cli": "^6.6.1"
+    "sequelize-cli": "^6.6.1",
+    "winston": "^3.11.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.2",
@@ -66,7 +68,6 @@
     "nodemon": "^2.0.7",
     "prettier": "^3.0.3",
     "ts-node": "^10.9.1",
-    "tsconfig-paths": "^4.2.0",
     "typescript": "*"
   }
 }
