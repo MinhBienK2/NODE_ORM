@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
-import db from '@models/index';
+import { Users } from '@models/users';
 
 export const findUserByEmail = async email => {
-  return await db.Users?.findOne({ where: { email } });
+  return await Users.findOne({ where: { email } });
 };
 
 export const comparePassword = async (password, currentPassword): Promise<boolean> => {

@@ -1,7 +1,6 @@
 import bcrypt from 'bcrypt';
 
-import db from '@models/index';
-import { IUsers } from '@models/users';
+import { Users, UsersAttributes } from '@models/users';
 import ApiError from '@utils/ApiError';
 
 const saltRounds = 10;
@@ -12,17 +11,17 @@ export const hashPassword = async password => {
 };
 
 export const isEmailExists = async (email: string): Promise<boolean> => {
-  const user = await db.Users?.findOne({ where: { email } });
+  const user = await Users?.findOne({ where: { email } });
   if (user) return true;
 
   return false;
 };
 
-export const handleCreateUser = async (body: IUsers): Promise<any> => {
+export const handleCreateUser = async (body: UsersAttributes): Promise<any> => {
   try {
     const newPassword = await hashPassword(body.password);
 
-    const newUser = await db.Users?.create({
+    const newUser = await Users?.create({
       username: body.username,
       email: body.email,
       password: newPassword,
@@ -38,7 +37,7 @@ export const handleCreateUser = async (body: IUsers): Promise<any> => {
 
 export const handleGetUserById = async (userId: string) => {
   try {
-    const data = await db.Users?.findOne({
+    const data = await Users.findOne({
       where: {
         id: userId,
       },
@@ -53,7 +52,7 @@ export const handleGetUserById = async (userId: string) => {
 
 export const handleDeleteUserById = async (userId: string) => {
   try {
-    return await db.Users?.destroy({
+    return await Users.destroy({
       where: {
         id: userId,
       },

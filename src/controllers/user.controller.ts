@@ -1,7 +1,7 @@
-import { userService } from '@services/index';
-import { IUsers } from '@models/users';
 import CatchAsync from '@utils/CatchAsync';
 import ApiError from '@utils/ApiError';
+import { userService } from '@services/index';
+import { UsersAttributes } from '@models/users';
 import { isEmailExists } from '@services/user.service';
 
 export const getUser = CatchAsync(async (req, res, next) => {
@@ -17,7 +17,7 @@ export const getUser = CatchAsync(async (req, res, next) => {
 });
 
 export const createUser = CatchAsync(async (req, res, next) => {
-  const body: IUsers = req.body;
+  const body: UsersAttributes = req.body;
 
   const checkEmailExists = await isEmailExists(body.email);
   if (checkEmailExists) {

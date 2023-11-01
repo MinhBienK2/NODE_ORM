@@ -3,7 +3,7 @@ import mysql from 'mysql2/promise';
 import logger from './logger';
 
 const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
+const config = require(__dirname + '/../config/database.js')[env];
 
 let sequelize;
 
