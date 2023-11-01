@@ -14,7 +14,8 @@
     "query": {
       "raw": true,
       "mysql57": true
-    }
+    },
+    "logging": false
   },
   "test": {
     "username": "root",

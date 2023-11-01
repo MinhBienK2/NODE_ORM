@@ -2,13 +2,16 @@
   "name": "node_orm",
   "version": "1.0.0",
   "description": "backend nodejs with mysql",
-  "main": "src/server.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rm -rf dist && tsc -p tsconfig.json && gulp copy && gulp merge",
-    "start": "node dist/server.js",
+    "dev": "NODE_ENV=development ts-node-dev -r tsconfig-paths/register --respawn --transpile-only ./src/server.ts",
+    "prod": "npm run build && node -r ./prod-paths.js ./dist/server.js",
+    "build": "NODE_ENV=production rm -rf dist && npm run build-ts",
+    "build-ts": "tsc -p .",
     "watch": "nodemon --exec \"npm run build && npm run start\" --watch src --ext ts",
-    "watch-dirty": "nodemon --exec \"tsc -p tsconfig.json && npm run start\" --watch src --ext ts",
+    "watch-dirty": "nodemon --exec \"tsc -p tsconfig.json && npm run start\" --watch src",
     "checkTs": "tsc --noEmit",
     "eslint": "eslint --ext js,ts",
     "lint": "yarn run eslint",
@@ -31,25 +34,21 @@
     "express",
     "mysql"
   ],
-  "_moduleAliases": {
-    "@utils": "dist/utils",
-    "@config": "dist/config",
-    "@controllers": "dist/controllers",
-    "@models": "dist/models",
-    "@route": "dist/route",
-    "@views": "dist/views"
-  },
   "author": "MinhBien",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
     "ejs": "^3.1.5",
     "express": "^4.17.1",
-    "module-alias": "^2.2.3",
+    "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.6.1",
+    "redis": "^4.6.10",
     "sequelize": "^6.33.0",
     "sequelize-cli": "^6.6.1",
+    "tsconfig-paths": "^4.2.0",
+    "uuid": "^9.0.1",
     "winston": "^3.11.0"
   },
   "devDependencies": {
@@ -65,9 +64,9 @@
     "eslint-plugin-prettier": "^5.0.0",
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
-    "nodemon": "^2.0.7",
     "prettier": "^3.0.3",
     "ts-node": "^10.9.1",
-    "typescript": "*"
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.2.2"
   }
 }

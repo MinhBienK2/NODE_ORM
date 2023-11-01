@@ -33,6 +33,14 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
     semi: ['error', 'always'],
+    // 'no-async-promise-executor': 'off',
+    // '@typescript-eslint/no-misused-promises': [
+    //   'error',
+    //   {
+    //     checksVoidReturn: false,
+    //   },
+    // ],
+
     //'no-unused-vars': ['error', { vars: 'all' }], //error when variable not used
   },
 };

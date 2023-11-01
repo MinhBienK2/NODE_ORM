@@ -23,7 +23,7 @@ const isRequest = format((info, opts) => {
   return false;
 });
 
-export const logger = createLogger({
+const logger = createLogger({
   level: 'info',
   format: format.combine(
     format.timestamp({
@@ -62,3 +62,5 @@ if (env.NODE_ENV !== 'production') {
     }),
   );
 }
+
+export default logger;
