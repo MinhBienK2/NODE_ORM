@@ -5,7 +5,6 @@ import { UsersAttributes } from '@models/users';
 import { isEmailExists } from '@services/user.service';
 
 export const getUser = CatchAsync(async (req, res, next) => {
-  console.log('user', req.user);
   const { userId } = req.params;
   if (!userId) return next(new ApiError('id not found', 400));
 

@@ -7,6 +7,7 @@ import {
   ForeignKey,
   ModelScopeOptions,
   ModelValidateOptions,
+  Sequelize,
 } from 'sequelize';
 
 import { sequelize } from '@config/connectDB';
@@ -29,6 +30,16 @@ const RepositoryDefinition = {
   email: { type: DataTypes.STRING, unique: true, allowNull: false },
   password: { type: DataTypes.STRING, allowNull: false },
   role: { type: DataTypes.INTEGER, allowNull: false },
+  createdAt: {
+    type: DataTypes.BIGINT({ length: 13 }), // Kiểu dữ liệu DATE với precision 6 để lưu trữ milliseconds
+    allowNull: true,
+    defaultValue: new Date().getTime(),
+  },
+  updatedAt: {
+    type: DataTypes.BIGINT({ length: 13 }), // Kiểu dữ liệu DATE với precision 6 để lưu trữ milliseconds
+    allowNull: true,
+    defaultValue: new Date().getTime(),
+  },
 };
 
 export class Users extends Model<UsersAttributes, UsersCreationAttributes> implements UsersAttributes {
@@ -37,8 +48,8 @@ export class Users extends Model<UsersAttributes, UsersCreationAttributes> imple
   declare email: string;
   declare password: string;
   declare role: number;
-  declare updatedAt: number;
-  declare createdAt: number;
+  declare updatedAt?: number;
+  declare createdAt?: number;
   /**
    * Helper method for defining associations.
    * This method is not a part of Sequelize lifecycle.
@@ -64,8 +75,9 @@ export class Users extends Model<UsersAttributes, UsersCreationAttributes> imple
 Users.init(RepositoryDefinition, {
   sequelize,
   modelName: 'Users',
-  updatedAt: true, // default add the field updated_at
-  createdAt: true, // and created_at
+  timestamps: false,
+  // updatedAt: true, // default add the field updated_at
+  // createdAt: true, // and created_at
   scopes: Users.scopes,
   validate: Users.validations,
 });

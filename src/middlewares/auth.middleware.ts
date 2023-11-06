@@ -1,10 +1,9 @@
-import { UsersAttributes } from './../models/users';
+import { UsersAttributes } from '@models/users';
 import { sequelize } from '@config/connectDB';
 import { QueryTypes } from 'sequelize';
 
 import CatchAsync from '../utils/CatchAsync';
 import ApiError from '@utils/ApiError';
-import jwt from 'jsonwebtoken';
 import JwtRedis from '@utils/jwtRedis';
 import { redisClient } from '@utils/redis';
 
@@ -18,13 +17,16 @@ const getUser = async (userId: string): Promise<{ [key: string]: any } | undefin
   const CACHE_KEY: string = `user:${userId}`;
 
   const cacheUser = await redisClient.hGetAll(CACHE_KEY);
-  if (!cacheUser) {
+  if (cacheUser && Object.keys(cacheUser).length === 0) {
     const query = `SELECT username, email, role, updatedAt, createdAt FROM Users WHERE id = '${userId}'`;
-    const user = await sequelize.query(query, { type: QueryTypes.SELECT });
+    const [user]: [Required<UsersAttributes>] = await sequelize.query(query, { type: QueryTypes.SELECT });
 
     // add cache
-    const addUser = await redisClient.hSet(CACHE_KEY, user);
-    if (addUser) return user;
+    const addHashUser = await redisClient.hSet(CACHE_KEY, { ...user });
+    // set expire of key
+    await redisClient.EXPIRE(CACHE_KEY, 9000);
+
+    if (addHashUser) return user;
     return undefined;
   }
 
@@ -43,7 +45,6 @@ export const protect = CatchAsync(async (req, res, next) => {
   const decoded: Decode = await jwtRedis.verify(token, process.env.JWT_SECRET);
 
   const user = await getUser(decoded.id);
-  console.log(user);
   req.user = user;
 
   next();

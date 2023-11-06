@@ -6,7 +6,6 @@ import { protect } from '@middlewares/auth.middleware';
 const router = express.Router();
 
 router.param('userId', function (req, res, next, id) {
-  console.log('CALLED ONLY ONCE');
   next();
 });
 router.get('/:userId', protect as RequestHandler, userController.getUser as RequestHandler);

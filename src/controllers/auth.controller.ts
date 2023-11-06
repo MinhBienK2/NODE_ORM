@@ -103,8 +103,6 @@ export const refreshToken = CatchAsync(async (req: CustomBodyRequest<{ refreshTo
   const decode = await refreshTokenCorrect(PREFIX_REFRESH_TOKEN, refreshToken, process.env.JWT_SECRET);
   if (!decode) return next(new ApiError('Refresh token fail', 400));
 
-  const user = await handleGetUserById(userId);
-
   const JwtRedisToken = new JwtRedis(PREFIX_TOKEN);
   const token = await JwtRedisToken.sign(
     {

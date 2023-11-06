@@ -5,30 +5,33 @@ module.exports = {
     await queryInterface.createTable('Users', {
       id: {
         allowNull: false,
-        //autoIncrement: true,
         primaryKey: true,
         type: Sequelize.UUID,
         defaultValue: Sequelize.DataTypes.UUIDV4,
       },
       username: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       email: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       password: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       role: {
         type: Sequelize.INTEGER,
+        allowNull: false,
       },
       createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.BIGINT({ length: 13 }), // Kiểu dữ liệu DATE với precision 6 để lưu trữ milliseconds
+        allowNull: true,
       },
       updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.BIGINT({ length: 13 }), // Kiểu dữ liệu DATE với precision 6 để lưu trữ milliseconds
+        allowNull: true,
       },
     });
   },
