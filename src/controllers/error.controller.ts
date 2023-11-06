@@ -1,4 +1,5 @@
 import logger from '@config/logger';
+import { TOKEN_EXPIRED } from 'constants/error.constant';
 
 const handleErrorDevelopment = (err, res) => {
   logger.error(err);

@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-local
+    cap_add:
+     - SYS_NICE
+    #restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      #- MYSQL_DATABASE=quotes
+      - MYSQL_ROOT_PASSWORD=minhbien123
+      - MYSQL_ROOT_HOST=172.19.0.1
+      #- MYSQL_USER=root
+      #- MYSQL_PASSWORD=minhbien123
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql-db:/var/lib/mysql
+
+      # create data when start
+      #- ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - mysql-network  
+    
+      
+volumes:
+  mysql-db:
+    driver: local
+
+networks:
+  mysql-network:
+    driver: bridge

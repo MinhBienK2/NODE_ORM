@@ -17,6 +17,8 @@ export interface UsersAttributes {
   email: string;
   password: string;
   role: number;
+  updatedAt?: number;
+  createdAt?: number;
 }
 
 export interface UsersCreationAttributes extends Optional<UsersAttributes, 'id'> {}
@@ -35,6 +37,8 @@ export class Users extends Model<UsersAttributes, UsersCreationAttributes> imple
   declare email: string;
   declare password: string;
   declare role: number;
+  declare updatedAt: number;
+  declare createdAt: number;
   /**
    * Helper method for defining associations.
    * This method is not a part of Sequelize lifecycle.
@@ -46,7 +50,7 @@ export class Users extends Model<UsersAttributes, UsersCreationAttributes> imple
 
   static readonly scopes: ModelScopeOptions = {
     /*
-        nơi khai báo scope
+        where validation is scope
       */
   };
 
@@ -56,6 +60,7 @@ export class Users extends Model<UsersAttributes, UsersCreationAttributes> imple
       */
   };
 }
+
 Users.init(RepositoryDefinition, {
   sequelize,
   modelName: 'Users',

@@ -5,6 +5,7 @@ import { UsersAttributes } from '@models/users';
 import { isEmailExists } from '@services/user.service';
 
 export const getUser = CatchAsync(async (req, res, next) => {
+  console.log('user', req.user);
   const { userId } = req.params;
   if (!userId) return next(new ApiError('id not found', 400));
 
@@ -17,7 +18,7 @@ export const getUser = CatchAsync(async (req, res, next) => {
 });
 
 export const createUser = CatchAsync(async (req, res, next) => {
-  const body: UsersAttributes = req.body;
+  const body: Omit<UsersAttributes, 'id'> = req.body;
 
   const checkEmailExists = await isEmailExists(body.email);
   if (checkEmailExists) {

@@ -1,44 +1,57 @@
-const CatchAsync = require('../utils/CatchAsync');
-const ApiError = require('@utils/ApiError');
-const jwt = require('jsonwebtoken');
+import { UsersAttributes } from './../models/users';
+import { sequelize } from '@config/connectDB';
+import { QueryTypes } from 'sequelize';
 
-const { User } = require('../models');
+import CatchAsync from '../utils/CatchAsync';
+import ApiError from '@utils/ApiError';
+import jwt from 'jsonwebtoken';
+import JwtRedis from '@utils/jwtRedis';
+import { redisClient } from '@utils/redis';
 
-const protect = CatchAsync(async (req, res, next) => {
-  let token;
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-    token = req.headers.authorization.split(' ')[1];
-  } else if (req.cookies.jwt) {
-    token = req.cookies.jwt;
+interface Decode extends UsersAttributes {
+  id: string;
+  iat: number;
+  exp: number;
+}
+
+const getUser = async (userId: string): Promise<{ [key: string]: any } | undefined> => {
+  const CACHE_KEY: string = `user:${userId}`;
+
+  const cacheUser = await redisClient.hGetAll(CACHE_KEY);
+  if (!cacheUser) {
+    const query = `SELECT username, email, role, updatedAt, createdAt FROM Users WHERE id = '${userId}'`;
+    const user = await sequelize.query(query, { type: QueryTypes.SELECT });
+
+    // add cache
+    const addUser = await redisClient.hSet(CACHE_KEY, user);
+    if (addUser) return user;
+    return undefined;
+  }
+
+  return cacheUser;
+};
+
+export const protect = CatchAsync(async (req, res, next) => {
+  let token: string | undefined;
+  const authorization = req.headers.authorization;
+  if (authorization?.startsWith('Bearer')) {
+    token = req?.headers?.authorization?.split(' ')[1];
   }
   if (!token) return next(new ApiError('You are not logged in', 401));
-  const decoded = await jwt.verify(token, process.env.JWT_SECRET_IN);
-  const freshUser = await User.findById(decoded.id);
-  if (!freshUser) return next(new ApiError('the user belonging to this token dose no longer exist', 401));
-  if (freshUser.changePasswordAfter(decoded.iat)) {
-    return next(new ApiError('User recently changed password,Please login again', 401));
-  }
-  req.user = freshUser;
+
+  const jwtRedis = new JwtRedis('user:token');
+  const decoded: Decode = await jwtRedis.verify(token, process.env.JWT_SECRET);
+
+  const user = await getUser(decoded.id);
+  console.log(user);
+  req.user = user;
+
   next();
 });
 
-const restrict = (...role) =>
+export const restrict = (...role) =>
   CatchAsync(async (req, res, next) => {
-    // console.log(role);
-    const trict = role.includes(req.user.role);
+    const trict = role.includes(req?.user?.role);
     if (!trict) return next(new ApiError('User does not have permission !', 400));
     next();
   });
-
-const isLoggedIn = CatchAsync(async (req, res, next) => {
-  if (req.cookies.jwt) {
-    // console.log(req.cookies.jwt);
-    const user = await User.findOne({});
-  }
-});
-
-module.exports = {
-  protect,
-  restrict,
-  isLoggedIn,
-};

@@ -17,7 +17,7 @@ export const isEmailExists = async (email: string): Promise<boolean> => {
   return false;
 };
 
-export const handleCreateUser = async (body: UsersAttributes): Promise<any> => {
+export const handleCreateUser = async (body: Omit<UsersAttributes, 'id'>): Promise<any> => {
   try {
     const newPassword = await hashPassword(body.password);
 

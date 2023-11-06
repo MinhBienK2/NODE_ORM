@@ -10,9 +10,9 @@ export const connectCache = async () => {
     redisClient.on('error', function (err) {
       logger.info('Could not establish a connection with redis. ' + err);
     });
-    redisClient.on('connect', function (err) {
-      logger.info('Connected to redis successfully');
-    });
+
+    await redisClient.connect();
+    logger.info('Connection redis success!');
   } catch (error) {
     logger.error('redis - ', error);
   }
