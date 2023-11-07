@@ -19,6 +19,10 @@ const PREFIX_TOKEN = 'user:token';
 export const login = CatchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
+  if (!email || !password) {
+    return next(new ApiError('not valid email or password', 400));
+  }
+
   const user: Partial<Users> | null = await findUserByEmail(email);
   if (!user) return next(new ApiError('Email dose not exist', 400));
 
@@ -80,7 +84,9 @@ export const register = CatchAsync(async (req, res, next) => {
 });
 
 export const logout = CatchAsync(async (req, res, next) => {
+  console.log('headers ne', req.headers);
   const token = req.headers.authorization?.split(' ')[1];
+  console.log('token ne', token);
 
   if (!token) return next(new ApiError('Token is required', 400));
 
@@ -113,6 +119,7 @@ export const refreshToken = CatchAsync(async (req: CustomBodyRequest<{ refreshTo
   );
 
   res.status(200).json({
+    status: 'success',
     data: {
       token,
       refreshToken,
