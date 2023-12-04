@@ -61,3 +61,8 @@ export const handleDeleteUserById = async (userId: string) => {
     throw new ApiError(`Error: ${error}`, 400);
   }
 };
+
+export const isUUIDV4 = (str: string): boolean => {
+  const pattern = /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
+  return pattern.test(str);
+};

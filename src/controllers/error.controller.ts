@@ -1,18 +1,15 @@
 import logger from '@config/logger';
-import { TOKEN_EXPIRED } from 'constants/error.constant';
 
 const handleErrorDevelopment = (err, res) => {
-  logger.error(err);
   console.log(err);
   res.status(err.statusCode).json({
     status: err.status,
-    error: err,
     message: err.message,
-    stack: err.stack,
   });
 };
 
 const handleErrorProduction = (err, res) => {
+  logger.error(err);
   if (err.isOperational) {
     res.status(err.statusCode).json({
       status: err.status,

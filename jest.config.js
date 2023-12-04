@@ -16,7 +16,7 @@ const config = {
   // Indicates whether the coverage information should be collected while executing the test
   collectCoverage: true,
   // An array of glob patterns indicating a set of files for which coverage information should be collected
-  collectCoverageFrom: [],
+  collectCoverageFrom: ['<rootDir>/src/controllers/**/*.ts'],
   // The directory where Jest should output its coverage files
   coverageDirectory: 'coverage',
   // An array of regexp pattern strings used to skip coverage collection
@@ -57,7 +57,13 @@ const config = {
   // An array of file extensions your modules use
   moduleFileExtensions: ['js', 'mjs', 'cjs', 'jsx', 'ts', 'tsx', 'json', 'node'],
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-
+  moduleNameMapper: {
+    '^@config/(.*)$': '<rootDir>/src/config/$1',
+    '^@controllers/(.*)$': '<rootDir>/src/controllers/$1',
+    '^@models/(.*)$': '<rootDir>/src/models/$1',
+    '^@utils/(.*)$': '<rootDir>/src/utils/$1',
+    '^@services/(.*)$': '<rootDir>/src/services/$1',
+  },
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],
   // Activates notifications for test results
@@ -65,7 +71,7 @@ const config = {
   // An enum that specifies notification mode. Requires { notify: true }
   // notifyMode: "failure-change",
   // A preset that is used as a base for Jest's configuration
-  // preset: undefined,
+  preset: 'ts-jest',
   // Run tests from one or more projects
   // projects: undefined,
   // Use this configuration option to add custom reporters to Jest
@@ -104,9 +110,7 @@ const config = {
   //   "**/?(*.)+(spec|test).[tj]s?(x)"
   // ],
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
-  // testPathIgnorePatterns: [
-  //   "/node_modules/"
-  // ],
+  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/src/__tests__/users/mocks/', '<rootDir>/src/__tests__/auth/mocks/'],
   // The regexp pattern or array of patterns that Jest uses to detect test files
   testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.[jt]sx?$',
   // This option allows the use of a custom results processor

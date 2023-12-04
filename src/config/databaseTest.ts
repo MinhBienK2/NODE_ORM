@@ -1,11 +1,13 @@
 const Sequelize = require('sequelize');
 import mysql from 'mysql2/promise';
 import logger from './logger';
+import { Users } from '@models/users';
 
-const env = process.env.NODE_ENV || 'development';
+const env = process.env.NODE_ENV || 'test';
 const config = require(__dirname + '/../config/database.js')[env];
 
 let sequelize;
+let connectMysql;
 
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
@@ -13,15 +15,15 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
-const connectDB = async () => {
+const connectDBTesting = async () => {
   try {
-    const connection = await mysql.createConnection({
+    connectMysql = await mysql.createConnection({
       host: config.host,
       port: config.port,
       user: config.username,
       password: config.password,
     });
-    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${config.database}\`;`);
+    await connectMysql.query(`CREATE DATABASE IF NOT EXISTS \`${config.database}\`;`);
 
     await sequelize.sync();
     await sequelize.authenticate();
@@ -32,6 +34,9 @@ const connectDB = async () => {
   }
 };
 
-export { sequelize, config };
+const closeDBTesting = async () => {
+  sequelize.close();
+  connectMysql.end();
+};
 
-export default connectDB;
+export { sequelize, closeDBTesting, connectDBTesting };

@@ -1,0 +1,61 @@
+version: "3"
+
+services:
+  backend:
+    build: .
+    deploy:
+      resources:
+        limits:
+          cpus: "${DOCKER_NODE_CPUS:-0}"
+          memory: "${DOCKER_NODE_MEMORY:-0}"
+    env_file:
+      - ./config/dev.env
+    image: shopgao
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - node-network
+    command: npm start
+
+  mongodb:
+    deploy:
+      resources:
+        limits:
+          cpus: "${DOCKER_MONGO_CPUS:-0}"
+          memory: "${DOCKER_MONGO_MEMORY:-0}"
+    env_file:
+      - ./config/dev.env
+    image: mongo:4.2.1-bionic
+    volumes:
+      - dbdata:/data/db
+    networks:
+      - node-network
+    restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
+
+  redis:
+    container_name: redis
+    deploy:
+      resources:
+        limits:
+          cpus: "${DOCKER_REDIS_CPUS:-0}"
+          memory: "${DOCKER_REDIS_MEMORY:-0}"
+    image: docker.io/bitnami/redis:latest
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - "6379:6379"
+    networks:
+      - node-network
+    restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
+
+volumes:
+  dbdata:
+
+networks:
+  node-network:
+    driver: bridge
+
+

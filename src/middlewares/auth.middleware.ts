@@ -40,11 +40,10 @@ export const protect = CatchAsync(async (req, res, next) => {
     token = req?.headers?.authorization?.split(' ')[1];
   }
   if (!token) return next(new ApiError('You are not logged in', 401));
-  console.log(token);
 
   const jwtRedis = new JwtRedis('user:token');
   const decoded: Decode = await jwtRedis.verify(token, process.env.JWT_SECRET);
-  console.log(decoded);
+
   const user = await getUser(decoded.id);
   req.user = user;
 
